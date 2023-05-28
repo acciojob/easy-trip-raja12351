@@ -1,73 +1,60 @@
 package com.driver.controllers;
 
 import com.driver.model.Airport;
+import com.driver.model.City;
 import com.driver.model.Flight;
 import com.driver.model.Passenger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.Date;
 
-@Service
 public class AirportService {
-    @Autowired
-    AirportRepository airportRepository;
+    AirportRepository airportRepository= new AirportRepository();
 
-    public static void addAirport(Airport airport) {
-        AirportRepository.addAirport(airport);
+    public void addAirport(Airport airport) {
+        airportRepository.addAirport(airport);
     }
 
-    public static String getLargestAirportName() {
-        List<String> airports = AirportRepository.getAllAirports();
-        int maxTerminal = 0;
-        String airportWithMaxTerminal = "";
-        for(String name : airports){
-            Airport airport = AirportRepository.getAirportByName(name);
-            if(airport.getNoOfTerminals()>maxTerminal){
-                maxTerminal = airport.getNoOfTerminals();
-                airportWithMaxTerminal = airport.getAirportName();
-            }
-        }
-        return airportWithMaxTerminal;
+    public String getLargestAirportName() {
+        return airportRepository.getLargestAirportName();
     }
 
-    public static void addFlight(Flight flight) {
-        AirportRepository.addFlight(flight);
+    public void aaddFlight(Flight flight) {
+        airportRepository.addFlight(flight);
     }
 
-    public static String getAirportNameFromFlightId(Integer flightId) {
-        Optional<String> starting = AirportRepository.getAirportByFlightId(flightId);
-        if(starting.isPresent()){
-            return starting.get();
-        }
-        throw new RuntimeException("There is no flight for the flightId: " + flightId);
+    public void addPassenger(Passenger passenger) {
+        airportRepository.addPassenger(passenger);
     }
 
-    public static void addPassenger(Passenger passenger) {
-        AirportRepository.addPassenger(passenger);
+    public String bookATicket(Integer flightId, Integer passengerId) {
+        return  airportRepository.bookATicket(flightId,passengerId);
     }
 
-    public static boolean bookATicket(Integer flightId, Integer passengerId) {
-        return AirportRepository.bookATicket(flightId,passengerId);
+    public String cancelATicket(Integer flightId, Integer passengerId) {
+        return airportRepository.cancelATicket(flightId,passengerId);
     }
 
-    public static String cancelTicket(Integer flightId, Integer passengerId) {
-        Optional<Passenger> passengerOptional = AirportRepository.getPassengerById(passengerId);
-        Optional<Flight> flightOptional = AirportRepository.getFlightById(flightId);
-        if(passengerOptional.isEmpty()){
-            throw new RuntimeException("Passenger id is Invalid");
-        }
-        if(flightOptional.isEmpty()){
-            throw new RuntimeException("Flight id is Invalid");
-        }
-        String confirmation = AirportRepository.cancelTicket(flightId,passengerId);
-        return confirmation;
+    public int countOfBookingsDoneByPassengerAllCombined(Integer passengerId) {
+        return airportRepository.countOfBookingsDoneByPassengerAllCombined(passengerId);
     }
 
-    public static int calculateFare(Integer flightId) {
-        ArrayList<Integer> passengers = AirportRepository.getAllPassengersForFlight(flightId);
-        return 3000 + (passengers.size()*50);
+    public int calculateFare(Integer flightId) {
+        return airportRepository.calculateFare(flightId);
+    }
+
+    public double getShortestTime(City fromCity, City toCity) {
+        return airportRepository.getShortestTime(fromCity,toCity);
+    }
+
+    public int calculateRevenueOfAFlight(Integer flightId) {
+        return airportRepository.calculateRevenueOfAFlight(flightId);
+    }
+
+    public String getAirportName(Integer flightId) {
+        return airportRepository.getAirportNmae(flightId);
+    }
+
+    public int getNumberOfPeople(Date date, String airportName) {
+        return airportRepository.getNumberOfPeople(date, airportName);
     }
 }
